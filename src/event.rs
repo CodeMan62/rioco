@@ -1,9 +1,8 @@
-use std::{collections::HashMap, io};
-
 use mio::{
-    Interest, Poll, Token,
+    Events, Interest, Poll, Token,
     event::{Event, Source},
 };
+use std::{collections::HashMap, io, time::Duration};
 
 pub enum Action {
     Add {
@@ -43,6 +42,19 @@ impl EventLoop {
         Ok(())
     }
     pub fn run(&mut self) -> io::Result<()> {
-        Ok(())
+        let mut events = Events::with_capacity(1024);
+        loop {
+            self.poll
+                .poll(&mut events, Some(Duration::from_millis(100)))?;
+            let mut actions = Vec::new();
+
+            for event in events.iter() {
+                let token = event.token();
+                if let Some(handler) = self.handlers.get_mut(&token) {
+                    let mut new_action = handler.handle_event(event)?;
+                    actions.append(&mut new_action);
+                }
+            }
+        }
     }
 }
