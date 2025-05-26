@@ -1,87 +1,107 @@
-# Project Roadmap - Building a Rust Green-Threads Library
+# Rioco: Rust Green-Threads Library Implementation Plan
 
-## Phase 1: Core Foundation
-- [ ] Set up project structure
-  - [ ] Initialize Cargo.toml with required dependencies
-  - [ ] Set up basic module structure
-  - [ ] Configure CI/CD pipeline (GitHub Actions)
-  - [ ] Set up testing framework
+## Implementation Sequence
 
-- [ ] Core Runtime Implementation
-  - [ ] Implement basic event loop using mio
-  - [ ] Create fiber/green-thread abstraction
-  - [ ] Implement basic task scheduling
-  - [ ] Create context switching mechanism
-  - [ ] Implement basic thread pool for worker threads
+### 1. Core Runtime Foundation ✓
+- [x] Implement basic event loop using mio
+- [ ] Create fiber/green-thread abstraction
+  - [ ] Implement context switching mechanism (using crates like context or corosensei)
+  - [ ] Create basic task structure with state tracking
+- [ ] Implement basic scheduler
+  - [ ] Task queue management
+  - [ ] Task waking mechanism
+- [ ] Implement thread pool for worker threads
+  - [ ] Thread creation and management
+  - [ ] Work distribution mechanism
 
-## Phase 2: Synchronization Primitives
-- [ ] Implement core synchronization primitives
-  - [ ] Mutex implementation
-  - [ ] Condition variables
-  - [ ] Channels (bounded and unbounded)
-  - [ ] Event notifications
-  - [ ] Semaphores
-  - [ ] Read-write locks
+### 2. Basic I/O Operations
+- [ ] Implement TCP operations
+  - [ ] TCP listener implementation
+  - [ ] TCP stream read/write operations
+- [ ] Implement UDP socket operations
+- [ ] Implement basic timer functionality
+  - [ ] Timeout implementation
+  - [ ] Sleep operation
 
-## Phase 3: I/O Operations
-- [ ] Implement async I/O operations
-  - [ ] TCP connections (listener and stream)
-  - [ ] UDP sockets
-  - [ ] Unix domain sockets
-  - [ ] Async file I/O operations via thread pool
-  - [ ] Timer and timeout implementations
+### 3. Synchronization Primitives
+- [ ] Implement channels
+  - [ ] Bounded channel implementation
+  - [ ] Unbounded channel implementation
+- [ ] Implement mutex
+  - [ ] Basic locking mechanism
+  - [ ] Fair scheduling on mutex contention
+- [ ] Implement condition variables
+- [ ] Implement semaphores
 
-## Phase 4: Advanced Features
-- [ ] Implement advanced scheduling features
-  - [ ] Priority-based scheduling
-  - [ ] Work stealing algorithm
-  - [ ] Task cancellation
-  - [ ] Graceful shutdown mechanism
-  
-- [ ] Error handling and recovery
-  - [ ] Panic recovery in green threads
-  - [ ] Error propagation mechanisms
-  - [ ] Debugging utilities
+### 4. Advanced I/O Operations
+- [ ] Implement Unix domain sockets
+- [ ] Implement async file I/O operations
+  - [ ] File read/write using worker threads
+  - [ ] Directory operations
+- [ ] Enhanced timer capabilities
+  - [ ] Periodic timers
+  - [ ] Timer cancellation
 
-## Phase 5: Performance & Optimization
-- [ ] Performance optimization
-  - [ ] Implement efficient memory allocator for tasks
-  - [ ] Optimize context switching
-  - [ ] Reduce scheduling overhead
-  - [ ] Memory usage optimization
-  
-- [ ] Benchmarking
-  - [ ] Create comprehensive benchmark suite
-  - [ ] Compare with similar libraries (tokio, async-std)
+### 5. Advanced Scheduling Features
+- [ ] Implement task priorities
+- [ ] Implement work stealing algorithm
+- [ ] Implement task cancellation
+- [ ] Implement graceful shutdown mechanism
+
+### 6. Error Handling and Recovery
+- [ ] Implement panic recovery in green threads
+- [ ] Create error propagation mechanisms
+- [ ] Develop debugging utilities
+
+### 7. Performance Optimization
+- [ ] Optimize context switching
+- [ ] Implement efficient memory allocation for tasks
+- [ ] Reduce scheduling overhead
+- [ ] Create benchmarking suite
+  - [ ] Compare with tokio, async-std
   - [ ] Profile and optimize hot paths
 
-## Phase 6: Documentation & Examples
-- [ ] Documentation
-  - [ ] API documentation
-  - [ ] Usage guides
-  - [ ] Best practices
-  - [ ] Architecture documentation
-  
-- [ ] Examples
-  - [ ] Basic echo server
-  - [ ] Chat server implementation
-  - [ ] File server
-  - [ ] HTTP server example
-  - [ ] Stress test examples
+### 8. Documentation and Examples
+- [ ] Write API documentation
+- [ ] Create usage guides
+- [ ] Develop example applications
+  - [ ] Echo server
+  - [ ] Chat application
+  - [ ] HTTP server
 
-## Phase 7: Production Readiness
+### 9. Testing and Production Readiness
+- [ ] Implement comprehensive test suite
+  - [ ] Unit tests
+  - [ ] Integration tests
+  - [ ] Stress tests
 - [ ] Production hardening
-  - [ ] Extensive error handling
   - [ ] Resource cleanup
   - [ ] Memory leak prevention
   - [ ] Deadlock detection
 
-- [ ] Testing
-  - [ ] Unit tests
-  - [ ] Integration tests
-  - [ ] Stress tests
-  - [ ] Fuzzing tests
-  - [ ] Platform-specific tests
+## Implementation Notes
+
+1. **Dependencies Between Components:**
+   - Fiber implementation must be complete before any I/O or sync primitives
+   - Basic scheduler must be working before implementing advanced scheduling
+   - Worker thread pool should be implemented before file I/O operations
+
+2. **Key Implementation Decisions:**
+   - Choose between available context switching libraries (context, corosensei)
+   - Decide on task representation and lifecycle management
+   - Determine how to integrate with mio's event system
+   - Design API to be similar to std library where possible
+
+3. **Reference Materials:**
+   - Study mio documentation for event loop implementation
+   - Review tokio's reactor code for good practices
+   - Reference mioco's original implementation approach
+   - Examine other green-thread implementations (Go runtime, libdill)
+
+4. **Testing Strategy:**
+   - Test each component in isolation first
+   - Create integration tests for component interactions
+   - Develop stress tests for concurrency issues
 
 ## Future Considerations
 - [ ] Platform support
